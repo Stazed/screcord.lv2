@@ -204,6 +204,7 @@ inline std::string SCapture::get_path() {
     std::string pPath;
 
 #ifndef  __MOD_DEVICES__
+
    #ifdef _WIN32
     pPath = getenv("USERPROFILE");
     if (pPath.empty()) {
@@ -211,7 +212,21 @@ inline std::string SCapture::get_path() {
         pPath +=  getenv("HOMEPATH");
     }
    #else
-    pPath = getenv("HOME");
+
+    const char *Path = NULL;
+    if (make_path)
+    {
+        Path = make_path->path(make_path->handle, "");
+    }
+
+    if (Path != NULL)
+    {
+        pPath = Path;
+    }
+    else
+    {
+        pPath = getenv("HOME");
+    }
    #endif
     pPath += PATH_SEPARATOR "lv2record" PATH_SEPARATOR;
 #else // __MOD_DEVICES__
